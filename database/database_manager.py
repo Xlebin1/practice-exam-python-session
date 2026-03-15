@@ -1,5 +1,5 @@
 import sqlite3
-from models.task import Task 
+from models.task import Task
 from models.project import Project
 from models.user import User
 from datetime import datetime
