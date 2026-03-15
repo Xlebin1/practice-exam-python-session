@@ -1,3 +1,19 @@
+import pytest
+import sys
+import os
+from datetime import datetime, timedelta
+import tempfile
+from database.database_manager import DatabaseManager
+from models.user import User
+
+# Добавляем путь к модулям проекта
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from controllers.task_controller import TaskController
+from controllers.project_controller import ProjectController
+from controllers.user_controller import UserController
+
+
 class TestProjectController:
     """Тесты для ProjectController"""
 
@@ -5,7 +21,7 @@ class TestProjectController:
         """Настройка перед каждым тестом"""
         self.temp_db = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
         self.db_manager = DatabaseManager(self.temp_db.name)
-        self.db_manager.create_tables()
+        ##self.db_manager.create_tables()
         self.controller = ProjectController(self.db_manager)
 
     def teardown_method(self):
@@ -137,4 +153,3 @@ class TestProjectController:
         progress = self.controller.get_project_progress(project_id)
         assert isinstance(progress, float)
         assert 0 <= progress <= 100
-

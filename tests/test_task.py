@@ -11,7 +11,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from controllers.task_controller import TaskController
 from controllers.project_controller import ProjectController
 from controllers.user_controller import UserController
-
+from models.project import Project
+from models.user import User
 
 class TestTaskController:
     """Тесты для TaskController"""
@@ -20,16 +21,16 @@ class TestTaskController:
         """Настройка перед каждым тестом"""
         self.temp_db = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
         self.db_manager = DatabaseManager(self.temp_db.name)
-        self.db_manager.create_tables()
+        ##self.db_manager.create_tables()
         self.controller = TaskController(self.db_manager)
 
         # Создаем тестовые проекты и пользователей
-        self.project_id = self.db_manager.add_project(
-            Project("Тестовый проект", "Описание проекта", datetime.now(), datetime.now() + timedelta(days=30))
-        )
-        self.user_id = self.db_manager.add_user(
-            User("test_user", "test@example.com", "developer")
-        )
+        self.project_id = self.db_manager.add_project(Project(
+            "Тестовый проект", "Описание проекта", datetime.now(), datetime.now() + timedelta(days=30)
+        ))
+        self.user_id = self.db_manager.add_user(User(
+            "test_user", "test@example.com", "developer"
+        ))
 
     def teardown_method(self):
         self.db_manager.close()
@@ -190,9 +191,9 @@ class TestTaskController:
     def test_get_tasks_by_project(self):
         """Тест получения задач проекта"""
         # Создаем второй проект
-        project2_id = self.db_manager.add_project(
-            Project("Второй проект", "Описание", datetime.now(), datetime.now() + timedelta(days=30))
-        )
+        project2_id = self.db_manager.add_project(Project(
+            "Второй проект", "Описание", datetime.now(), datetime.now() + timedelta(days=30)
+        ))
 
         # Добавляем задачи в разные проекты
         self.controller.add_task("Задача в проекте 1", "Описание", 1, datetime.now() + timedelta(days=1),
@@ -209,9 +210,9 @@ class TestTaskController:
     def test_get_tasks_by_user(self):
         """Тест получения задач пользователя"""
         # Создаем второго пользователя
-        user2_id = self.db_manager.add_user(
-            User("user2", "user2@example.com", "developer")
-        )
+        user2_id = self.db_manager.add_user(User(
+            "user2", "user2@example.com", "developer"
+        ))
 
         # Добавляем задачи разным пользователям
         self.controller.add_task("Задача пользователя 1", "Описание", 1, datetime.now() + timedelta(days=1),
